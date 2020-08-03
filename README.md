@@ -16,3 +16,5 @@ The website should have the following features<br/>
 Later, when Carol approve the website UI and function, I will upload the photo here.
 
 <b>All the functions, workflow, design  should be clearly explained and marked here for us to refer</b>
+
+<b>For all the subtask we need to do, please create issue and then add card in "Project" </b>
