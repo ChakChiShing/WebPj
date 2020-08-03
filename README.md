@@ -1,4 +1,4 @@
-# webpj
+# WebPj
 Nexify Intern - Task 1   
 
 The website should have the following features<br/>
