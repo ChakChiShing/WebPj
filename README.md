@@ -5,7 +5,7 @@ The website should have the following features<br/>
 
 <h2><ul><b>
   <li>create and maintain a project</li>
-<li.define the project name, customer name, project status, project selling, expected cost, project period (SA&D, SI&I, UAT, Production Rollout, Nursing, SM&S)</li>
+<li>define the project name, customer name, project status, project selling, expected cost, project period (SA&D, SI&I, UAT, Production Rollout, Nursing, SM&S)</li>
 <li>create and maintain charging man-day rate of each category of staff</li>
 <li>create and maintain the team members and assign member into different categories</li>
 <li>charge members' work hours into project</li>
