@@ -18,3 +18,5 @@ Later, when Carol approve the website UI and function, I will upload the photo h
 <b>All the functions, workflow, design  should be clearly explained and marked here for us to refer</b>
 
 <b>For all the subtask we need to do, please create issue and then add card in "Project" </b>
+
+![img](homepage_design.png)
