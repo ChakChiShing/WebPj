@@ -9,15 +9,15 @@ class App extends Component  {
     return (
       <Router> 
         <div className="container">
-        <nav className="navbar navbar-default">
+        <nav className="navbar navbar-inverse">
             <div className="container-fluid"> 
               <div class ="navbar-header">
-                <b><h1>Project Cost Monitoring</h1></b>
+                <b><h5>Project Monitoring </h5></b>
               </div>
-                <ul className="nav nabar-nav"> 
-                <li className="navbar-item"><Link to="/" className="nav-link">Home</Link></li>
-                <li className="navbar-item"><Link to="/create" className="nav-link">Create New Project</Link></li>
-              </ul> 
+                  <ul className="nav nabar-nav navbar-right"> 
+                    <li className="navbar-item"><Link to="/" className="nav-link">Home</Link></li>
+                    <li className="navbar-item"><Link to="/create" className="nav-link">Create New Project</Link></li>
+                  </ul> 
             </div>
           </nav>
           <br/>
