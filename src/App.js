@@ -7,26 +7,19 @@ import TodosList from "./components/todos-list.component";
 class App extends Component  {
   render() {
     return (
-      <Router>
+      <Router> 
         <div className="container">
-          <div style={{flex: "1", flexDirection: 'row'}}>
-            <nav style={{flexDirection: "row"}}>
-          {/* <nav claseeName="navbar navbar-expand-lg navbar-light bg-light"> */}
-            {/* <div className="collpase navbar-collapse"> */}
-              {/* <ul className="navbar-nav mr-auto"> */}
-              <div className="navbar-nav mr-auto">
+        <nav className="navbar navbar-default">
+            <div className="container-fluid"> 
+              <div class ="navbar-header">
                 <b><h1>Project Cost Monitoring</h1></b>
-                <h4 className="navbar-item">
-                  <Link to="/" className="nav-link">Home</Link>
-                </h4>
-                <h4 className="navbar-item">
-                  <Link to="/create" className="nav-link">Create New Project</Link>
-                </h4>
               </div>
-              {/* </ul> */}
-            {/* </div> */}
+                <ul className="nav nabar-nav"> 
+                <li className="navbar-item"><Link to="/" className="nav-link">Home</Link></li>
+                <li className="navbar-item"><Link to="/create" className="nav-link">Create New Project</Link></li>
+              </ul> 
+            </div>
           </nav>
-          </div>
           <br/>
           <Route path="/" exact component={TodosList} />
           <Route path="/create" component={CreateTodo} />
