@@ -1,35 +1,135 @@
 import React, { Component } from 'react';
+import sortimg from './sorting.png';
 
 export default class TodosList extends Component {
+    
+    constructor(props) {
+        super(props);
+
+        this.onChangeFilterCustomer = this.onChangeFilterCustomer.bind(this);
+        this.onChangeFilterProject = this.onChangeFilterProject.bind(this);
+        this.onChangeFilterAD = this.onChangeFilterAD.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+
+        this.state ={
+            Filter_Customer: '',
+            Filter_Project: '',
+            Filter_AD: '', 
+        }
+    }
+
+    onChangeFilterCustomer(e) {
+        this.setState({
+            Filter_Customer: e.target.value
+        });
+    }
+
+    onChangeFilterProject(e) {
+            this.setState({
+                Filter_Project: e.target.value
+            });
+    }
+
+    onChangeFilterAD(e) {
+        this.setState({
+            Filter_AD: e.target.value
+        });
+    }
+    
+    onSubmit(e) {
+        e.preventDefault();
+        console.log(`Customer: ${this.state.Filter_Customer}`);
+        console.log(`Project: ${this.state.Filter_Project}`);
+        console.log(`AD: ${this.state.Filter_AD}`);
+
+    }
+
+    handleClick = () => {
+        console.log('Sorting  method will be done');
+      }
+
     render() {
         return (
-            <div>
+            <div className="container fluid">
                 <section class="jumbotron width:100 height=100">
                     <h2 class="text-center">Summary</h2>
-                    <p>Total Project Number: <p class="text-right">Number</p></p>
-                    <p>Overall Income: <p class="text-right">Number</p></p>
-                    <p>Overall Spending: <p class="text-right">Number</p></p>
-                    <p>Overall Gross Profit: <p class="text-right">Number</p></p>
+                    <p>Total Project Number: <text class="textAlign-right">variable</text></p>
+                    <p>Overall Income: <text class="text-center">variable</text></p>
+                    <p>Overall Spending: <text class="text-right">variable</text></p>
+                    <p>Overall Gross Profit: <text class="text-right">variable</text></p>
                 </section>
                 <hr></hr>
                 <section >
-                    <p>Filter by</p>
-                    <p>Customer Name:</p>
-                    <p>Project Name: </p>
-                    <p>AD user ID: </p>
+                    <h4>Filter by</h4>
+                    <form onSubmit={this.onSubmit}>
+                        <p>Customer Name: 
+                                <input type="text"
+                                className="form-control"
+                                value={this.state.Filter_Customer}
+                                onChange={this.onChangeFilterCustomer}
+                                /></p>
+                                
+                    <p>Project Name:    
+                                <input type="text"
+                                className="form-control"
+                                value={this.state.Filter_Project}
+                                onChange={this.onChangeFilterProject}
+                                /> </p>
+                    
+                    <p>AD user ID:    
+                                <input type="text"
+                                className="form-control"
+                                value={this.state.Filter_AD}
+                                onChange={this.onChangeFilterAD}
+                                /></p>
+
+                        <div className="form-group">
+                        <input type="submit" value="Search" className="btn btn-primary" />
+                    </div>
+                    </form>
+                    
+                    
                 </section>
                 <hr></hr>
-                <table boder="100" cellPadding="10" cellSpacing="0"> 
+                <table cellPadding="15"> 
                     <tr>
-                        <th>Project Name</th>
-                        <th>Customer</th>
-                        <th>PM</th>
-                        <th>Period</th>
-                        <th>Time Spent(days)</th>
-                        <th>EC</th>
-                        <th>AC</th>
-                        <th>I</th>
-                        <th>GP</th>
+                        <th>Project Name
+                            <button  onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button>
+                            </th>
+                        <th>Customer
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>PM
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>Period
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>Time Spent(days)
+                            <button  onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>EC
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>AC
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>I
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
+                        <th>GP
+                            <button onClick={this.handleClick} variant="light">
+                                <img src={sortimg} width="15" height="15" padding-left="5"/>
+                            </button></th>
                     </tr>
                     <hr></hr>
                     <tr>
