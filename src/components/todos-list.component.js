@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import sortimg from './sorting.png';
+import {Button, Table} from 'react-bootstrap';
 
 export default class TodosList extends Component {
     
@@ -46,17 +47,17 @@ export default class TodosList extends Component {
 
     handleClick = () => {
         console.log('Sorting  method will be done');
-      }
+    }
 
     render() {
         return (
             <div className="container fluid">
-                <section class="jumbotron width:100 height=100">
-                    <h2 class="text-center">Summary</h2>
-                    <p>Total Project Number: <text class="textAlign-right">variable</text></p>
-                    <p>Overall Income: <text class="text-center">variable</text></p>
-                    <p>Overall Spending: <text class="text-right">variable</text></p>
-                    <p>Overall Gross Profit: <text class="text-right">variable</text></p>
+                <section class="jumbotron width:50 height=50">
+                    <h2 class="text-center" >Summary</h2>
+                    <p>Total Project Number: <text>{this.props.TotalPJ}</text></p>
+                    <p>Overall Income: <text class="text-center">{this.props.TotalIncome}</text></p>
+                    <p>Overall Spending: <text class="text-right">{this.props.TotalSpending}</text></p>
+                    <p>Overall Gross Profit: <text class="text-right">{this.props.TotalGp}</text></p>
                 </section>
                 <hr></hr>
                 <section >
@@ -87,64 +88,150 @@ export default class TodosList extends Component {
                         <input type="submit" value="Search" className="btn btn-primary" />
                     </div>
                     </form>
-                    
-                    
                 </section>
                 <hr></hr>
-                <table cellPadding="15"> 
-                    <tr>
-                        <th>Project Name
-                            <button  onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button>
+                <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                            <th class="th-sm">Project Name
                             </th>
-                        <th>Customer
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>PM
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>Period
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>Time Spent(days)
-                            <button  onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>EC
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>AC
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>I
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                        <th>GP
-                            <button onClick={this.handleClick} variant="light">
-                                <img src={sortimg} width="15" height="15" padding-left="5"/>
-                            </button></th>
-                    </tr>
-                    <hr></hr>
-                    <tr>
-                        <td>mobile app</td>
-                        <td>EPD</td>
-                        <td>A</td>
-                        <td>SA&D</td>
-                        <td>50</td>
-                        <td>$17231</td>
-                        <td>$12495</td>
-                        <td>$100000</td>
-                        <td>$82735</td>
-                    </tr>
+                            <th class="th-sm">Customer
+                            </th>
+                            <th class="th-sm">PM
+                            </th>
+                            <th class="th-sm">Current Period
+                            </th>
+                            <th class="th-sm">Time Spent(days)
+                            </th>
+                            <th class="th-sm">EC
+                            </th>
+                            <th class="th-sm">AC
+                            </th>
+                            <th class="th-sm">Ioncome
+                            </th>
+                            <th class="th-sm">GP
+                            </th>
+                            <th class="th-sm"></th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+                            <tr>
+                            <td>mobile app</td>
+                                <td>EPD</td>
+                                <td>A</td>
+                                <td>SA&D</td>
+                                <td>50</td>
+                                <td>$17231</td>
+                                <td>$12495</td>
+                                <td>$100000</td>
+                                <td>$82735</td>
+                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
+                            </tr>
+
+                        </tbody>
                 </table>
             </div>
+
+                
+                
+            
         )
     }
 }
