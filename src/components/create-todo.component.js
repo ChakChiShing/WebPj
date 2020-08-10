@@ -5,22 +5,25 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Dropdown, SplitButton } from 'react-bootstrap'
 
 class NewProject extends Component {
-
-  state = {
-    projectName: '',
-    costumerName: '', 
-    projectSelling: '', 
-    startDate: new Date(), 
-    rowsTM: [],
-    option1: '',
-    option2: '',
-    option3: '',
-    option4: '',
-    option5: '',
-    option6: '', 
-    rowsEC: [],
+  constructor(props){
+    super(props);
+    this.state = {
+      projectName: '',
+      costumerName: '', 
+      projectSelling: '', 
+      startDate: new Date(), 
+      rowsTM: [],
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+      option5: '',
+      option6: '', 
+      rowsEC: [],
+    }
+    this.onChangeProjectName = this.onChangeProjectName.bind(this)
   }
-
+  
   onChangeProjectName = (e) => {
     this.setState({
       projectName: e.target.value
