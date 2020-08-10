@@ -67,6 +67,14 @@ class NewProject extends Component {
   handleChangeEC = (text, idx, name) => {
     const rowsEC = [...this.state.rowsEC];
     rowsEC[idx][name] = text;
+    if(this.state.rowsEC[idx].dropDownValue=='PM')
+      this.state.rowsEC[idx].cost = '2500';
+    else if(this.state.rowsEC[idx].dropDownValue=='SA')
+      this.state.rowsEC[idx].cost = '2000';
+    else if(this.state.rowsEC[idx].dropDownValue=='AP')
+      this.state.rowsEC[idx].cost = '1500';
+    else if(this.state.rowsEC[idx].dropDownValue=='P')
+      this.state.rowsEC[idx].cost = '1000';
     this.setState({rowsEC: rowsEC});
   }
   handleAddRowEC = () => {
@@ -91,6 +99,8 @@ class NewProject extends Component {
     console.log(this.state.projectName);
   }
   
+
+
 
   render() {
     return (
@@ -306,11 +316,12 @@ class NewProject extends Component {
                         <SplitButton            
                           id="dropdown-basic-button" 
                           title={this.state.rowsEC[idx].dropDownValue}
+                          type='button'
                         >
-                          <Dropdown.Item as='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>PM</div></Dropdown.Item>
-                          <Dropdown.Item as='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>SA</div></Dropdown.Item>
-                          <Dropdown.Item as='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>AP</div></Dropdown.Item>
-                          <Dropdown.Item as='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>P</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>PM</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>SA</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>AP</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>P</div></Dropdown.Item>
                         </SplitButton>
                       </td>
                       <td style={{ width: '5%'}}>
@@ -326,6 +337,7 @@ class NewProject extends Component {
                           onChange={(e) => this.handleChangeEC(e.target.value, idx, e.target.name)}
                           className="form-control"
                           placeholder='Equipment'
+                          disabled={this.state.rowsEC[idx].dropDownValue!='Position'}
                         />
                       </td>
                       <td style={{width: '20%'}}>
@@ -350,6 +362,7 @@ class NewProject extends Component {
                             onChange={(e) => this.handleChangeEC(e.target.value, idx, e.target.name)}
                             className="form-control"
                             placeholder='Cost'
+                            disabled={this.state.rowsEC[idx].dropDownValue!='Position'}
                           />
                         </div>
                       </td>
