@@ -34,7 +34,7 @@ export default class ECChart extends Component {
     }
     render() {
         return(
-            <div className="chart" style={{width:300, height:300}}>
+            <div className="chart" style={{width:350, height:300}}>
                 <Bar 
                     data={this.state.chartData}
                     width={10}

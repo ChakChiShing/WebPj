@@ -2,6 +2,58 @@ import React, { Component } from 'react';
 import sortimg from './sorting.png';
 import {Button, Table} from 'react-bootstrap';
 
+const columns =[
+    {
+    dataField: 'ProjectName',
+    text: 'Project Name',
+    sort: true
+    },
+    {
+    dataField: 'CustomerName',
+    text: 'Customer',
+    sort: true
+    },
+    {
+    dataField: 'position_PM',
+    text: 'PM',
+    sort: true
+    },
+    {
+    dataField: 'Period',
+    text: 'Current Period',
+    sort: true
+    },
+    {
+    dataField: 'Time',
+    text: 'Time Spent',
+    sort: true
+    },
+    {
+    dataField: 'ExpectedCost',
+    text: 'EC',
+    sort: true
+    },
+    {
+    dataField: 'ActualCost',
+    text: 'AC',
+    sort: true
+    },
+    {
+    dataField: 'Income',
+    text: 'I',
+    sort: true
+    },
+    {
+    dataField: 'Gp',
+    text: 'GP',
+    sort: true
+    },
+]
+
+const defaultSorted = [{
+    dataField: 'name',
+    order: 'desc'
+  }];
 export default class TodosList extends Component {
     
     constructor(props) {
@@ -90,7 +142,7 @@ export default class TodosList extends Component {
                     </form>
                 </section>
                 <hr></hr>
-                <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <Table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                         <thead>
                             <tr>
                             <th class="th-sm">Project Name
@@ -107,7 +159,7 @@ export default class TodosList extends Component {
                             </th>
                             <th class="th-sm">AC
                             </th>
-                            <th class="th-sm">Ioncome
+                            <th class="th-sm">Income
                             </th>
                             <th class="th-sm">GP
                             </th>
@@ -140,93 +192,16 @@ export default class TodosList extends Component {
                                 <td>$82735</td>
                                 <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
                             </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-                            <tr>
-                            <td>mobile app</td>
-                                <td>EPD</td>
-                                <td>A</td>
-                                <td>SA&D</td>
-                                <td>50</td>
-                                <td>$17231</td>
-                                <td>$12495</td>
-                                <td>$100000</td>
-                                <td>$82735</td>
-                                <Button variant="primary" href="/project/1" style={{marginLeft:20}}>Open</Button>{' '}
-                            </tr>
-
                         </tbody>
-                </table>
+                </Table>
+
+{/* <BootstrapTable
+  bootstrap4
+  keyField="id"
+  data='null'
+  columns={ columns }
+  defaultSorted={ defaultSorted } 
+/> */}
             </div>
 
                 

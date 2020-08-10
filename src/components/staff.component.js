@@ -17,7 +17,7 @@ const rows = [
   export default class StaffDetail extends Component {
       render() {
           return(
-            <Table border='20' >
+            <Table >
                 <TableHead>
                     <TableRow>
                         <TableCell>Name</TableCell>
