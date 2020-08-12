@@ -1,59 +1,59 @@
 import React, { Component } from 'react';
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
-import { Dropdown, SplitButton } from 'react-bootstrap'
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Dropdown, DropdownButton } from 'react-bootstrap'
 
 class NewProject extends Component {
   constructor(props){
     super(props);
     this.state = {
       projectName: '',
-      costumerName: '', 
+      costumerLastName: '',
+      costumerFirstName: '',  
       projectSelling: '', 
-      startDate: new Date(), 
+      dateDD: '', 
+      dateMM: '', 
+      dateYYYY: '', 
       rowsTM: [],
-      option1: '',
-      option2: '',
-      option3: '',
-      option4: '',
-      option5: '',
-      option6: '', 
       rowsEC: [],
+      totalCost: '',
+      // error: {}, 
     }
-    this.onChangeProjectName = this.onChangeProjectName.bind(this)
   }
-  
-  onChangeProjectName = (e) => {
+  // validation = (name) => {
+  //   let error = this.state.error;
+
+  //   if(this.state.projectName === ''){
+  //     error[name] = 'Form cannot be epmty';
+  //   }
+
+  //   this.setState({error: error});
+  //   console.log(error)
+  // }
+//handle input change
+  handleChange = (name, value) => {
     this.setState({
-      projectName: e.target.value
+      [name]: value
     })
   }
-  onChangeCustomerName = (e) => {
-    this.setState({
-      customerName: e.target.value
-    })
-  }
-  onChangeProjectSelling = (e) => {
-    this.setState({
-      projectSelling: e.target.value
-    })
-  }
-  onChangeStartDate = (date) => {
-    this.setState({
-      startDate: date
-    })
-  }
-  handleChangeTM = (value, idx, name) => {
+//handle Team member change
+  handleChangeTM = (value, item, name) => {
     const rowsTM = [...this.state.rowsTM];
-    rowsTM[idx][name] = value;
+    item[name] = value;
     this.setState({
       rowsTM: rowsTM
     });
   };
   handleAddRowTM = () => {
     const item = {
-      name: "",
+      lastName: "",
+      firstName: '', 
+      workingHour: '', 
+      option1: false, 
+      option2: false, 
+      option3: false, 
+      option4: false, 
+      option5: false, 
+      option6: false, 
     };
     this.setState({
       rowsTM: [...this.state.rowsTM, item]
@@ -64,74 +64,115 @@ class NewProject extends Component {
       rowsTM: this.state.rowsTM.slice(0, -1)
     });
   };
-  handleChangeEC = (text, idx, name) => {
+//handle expected cost change
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.rowsEC !== this.state.rowsEC){
+      this.totalCost();
+    }
+    // if (prevState.projectName !== this.state.projectName){
+    //   this.validation('projectName');
+    // }
+  }
+  totalCost = () => {
+    let total = 0;
+    this.state.rowsEC.map(item => {
+      if(!isNaN(parseInt(item.cost))){
+        total += parseInt(item.cost);
+      }
+    })
+    if(total === 0) total = '';
+    this.setState({totalCost: total})
+  }
+  handleChangeEC = (value, item, name) => {
     const rowsEC = [...this.state.rowsEC];
-    rowsEC[idx][name] = text;
-    if(this.state.rowsEC[idx].dropDownValue=='PM')
-      this.state.rowsEC[idx].cost = '2500';
-    else if(this.state.rowsEC[idx].dropDownValue=='SA')
-      this.state.rowsEC[idx].cost = '2000';
-    else if(this.state.rowsEC[idx].dropDownValue=='AP')
-      this.state.rowsEC[idx].cost = '1500';
-    else if(this.state.rowsEC[idx].dropDownValue=='P')
-      this.state.rowsEC[idx].cost = '1000';
-    this.setState({rowsEC: rowsEC});
+    item[name] = value;
+    if(name === 'position') {
+      item.equipment = '';
+      item.cost = '';
+    }
+    if(item.position === 'PM' && !isNaN(parseInt(item['quantity']))){
+      item['cost'] = (parseInt(item['quantity'])*2500).toString();
+    } else if(item.position === 'SA' && !isNaN(parseInt(item['quantity']))){
+      item['cost'] = (parseInt(item['quantity'])*2000).toString();
+    } else if(item.position === 'AP' && !isNaN(parseInt(item['quantity']))){
+      item['cost'] = (parseInt(item['quantity'])*1500).toString();
+    } else if(item.position === 'P' && !isNaN(parseInt(item['quantity']))){
+      item['cost'] = (parseInt(item['quantity'])*1000).toString();
+    }
+    this.setState({
+      rowsEC: rowsEC
+    });
   }
   handleAddRowEC = () => {
-    const item = {
+    const obj = {
       equipment: "",
       quantity: '', 
       cost: '',
-      dropDownValue: 'Position', 
+      position: 'Position', 
     };
     this.setState({
-      rowsEC: [...this.state.rowsEC, item]
+      rowsEC: [...this.state.rowsEC, obj]
     });
   };
   handleRemoveRowEC = () => {
-    this.setState({
-      rowsEC: this.state.rowsEC.slice(0, -1)
-    });
+    this.setState({rowsEC: this.state.rowsEC.slice(0, -1)});
   };
+//handle submit
   onSubmit = (e) => {
     e.preventDefault();
     alert('submitted');
-    console.log(this.state.projectName);
   }
-  
-
 
 
   render() {
+    // console.log(this.state.totalCost)
     return (
       <div style={{marginTop: 20}}>
         <h3>Create New Project</h3>
         <form onSubmit={this.onSubmit}>
+{/* project name */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Project Name</label>
-            <div className='col-lg-6'>
+            <div className='col-lg-7'>
               <input  
                 type="text" 
                 className="form-control" 
                 value={this.state.projectName}
-                onChange={this.onChangeProjectName}
+                name='projectName'
+                onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                placeholder='Project Name'
               />
+              {/* <span style={{color: 'red'}}>{this.state.error['projectName']}</span> */}
             </div>
           </div>
+{/* customer name */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Customer Name</label>
-            <div className='col-lg-6'>
-              <input  
-                type="text" 
-                className="form-control" 
-                value={this.state.customerName}
-                onChange={this.onChangeCustomerName}
-              />
+            <div className='col-lg-7'>
+              <div className='input-group'>
+                <input  
+                  type="text" 
+                  className="form-control" 
+                  value={this.state.customerLastName}
+                  name='customerLastName'
+                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                  placeholder='Last Name'
+                />
+                <input  
+                  type="text" 
+                  className="form-control" 
+                  value={this.state.customerFirstName}
+                  name='customerFirstName'
+                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                  placeholder='First Name'
+                />
+              </div>
             </div>
           </div>
+{/* project selling */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Project Selling</label>
-            <div className='col-lg-6'>
+            <div className='col-lg-7'>
               <div className="input-group">
                 <div className='input-group-prepend'>
                   <div className='input-group-text'>$</div>
@@ -140,22 +181,62 @@ class NewProject extends Component {
                   type="number" 
                   className="form-control" 
                   value={this.state.projectSelling}
-                  onChange={this.onChangeProjectSelling}
+                  name='projectSelling'
+                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                  placeholder='Amount'
                 />
               </div>
             </div>
           </div>
+{/* start date */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Start Date</label>
             <div className='col-lg-6'>
-              <DatePicker
-                className='form-control'
-                selected={this.state.startDate}
-                onChange={this.onChangeStartDate}
-                dateFormat='dd/MM/yyyy'
-              />
+              <table className='table-borderless'>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input  
+                        type="number" 
+                        className="form-control" 
+                        value={this.state.dateDD}
+                        name='dateDD'
+                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                        placeholder='DD'
+                        max='31'
+                        min='1'
+                      />
+                    </td>
+                    <td>
+                      <input  
+                        type="number" 
+                        className="form-control" 
+                        value={this.state.dateMM}
+                        name='dateMM'
+                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                        placeholder='MM'
+                        max='12'
+                        min='1'
+                      />
+                    </td>
+                    <td>
+                      <input  
+                        type="number" 
+                        className="form-control" 
+                        value={this.state.dateYYYY}
+                        name='dateYYYY'
+                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+                        placeholder='YYYY'
+                        min='2000'
+                        max='3000'
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>                
+{/* Team Member */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Team Member</label>
             <div className="col-lg-7 column">
@@ -167,14 +248,35 @@ class NewProject extends Component {
                 <tbody>
                   {this.state.rowsTM.map((item, idx) => (
                     <tr id="addr0" key={idx}>
-                      <td>
+                      <td style={{width: '45%'}}>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            name="lastName"
+                            value={item.lastName}
+                            onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
+                            className="form-control"
+                            placeholder='Last Name'
+                          />
+                          <input
+                            type="text"
+                            name="firstName"
+                            value={item.firstName}
+                            onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
+                            className="form-control"
+                            placeholder='First Name'
+                          />
+                        </div>
+                      </td>
+                      <td style={{width: '15%'}}>
                         <input
-                          type="text"
-                          name="name"
-                          value={this.state.rowsTM[idx].name}
-                          onChange={(e) => this.handleChangeTM(e.target.value, idx, e.target.name)}
+                          type="number"
+                          name="workingHour"
+                          value={item.workingHour}
+                          onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
                           className="form-control"
-                          placeholder='Member Name'
+                          placeholder='Hour'
+                          min='1'
                         />
                       </td>
                       <td
@@ -186,12 +288,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox1" 
-                                value="option1"
+                                id={idx + '1'}
+                                name="option1"
+                                checked={item.option1}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox1"
+                                htmlFor={idx + '1'}
                                 style={{fontSize: 13}}
                               >
                                 SA&D
@@ -201,12 +305,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox2" 
-                                value="option2"
+                                id={idx + '2'}
+                                name="option2"
+                                checked={item.option2}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox2"
+                                htmlFor={idx + '2'}
                                 style={{fontSize: 13}}
                               >
                                 SI&I
@@ -216,12 +322,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox3" 
-                                value="option3"
+                                id={idx + '3'}
+                                name="option3"
+                                checked={item.option3}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox3"
+                                htmlFor={idx + '3'}
                                 style={{fontSize: 13}}
                               >
                                 UAT
@@ -231,12 +339,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox4" 
-                                value="option4"
+                                id={idx + '4'}
+                                name="option4"
+                                checked={item.option4}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox4"
+                                htmlFor={idx + '4'}
                                 style={{fontSize: 13}}
                               >
                                 SM&S
@@ -248,12 +358,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox5" 
-                                value="option5"
+                                id={idx + '5'}
+                                name="option5"
+                                checked={item.option5}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox5"
+                                htmlFor={idx + '5'}
                                 style={{fontSize: 13}}
                               >
                                 Production Rolling
@@ -263,12 +375,14 @@ class NewProject extends Component {
                               <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                id="inlineCheckbox6" 
-                                value="option6"
+                                id={idx + '6'}
+                                name="option6"
+                                checked={item.option6}
+                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
                               />
                               <label 
                                 className="form-check-label" 
-                                for="inlineCheckbox6"
+                                htmlFor={idx + '6'}
                                 style={{fontSize: 13}}
                               >
                                 Nursing
@@ -300,7 +414,7 @@ class NewProject extends Component {
               </button>
             </div>
           </div>
-
+{/* Expected Cost */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Expected Cost</label>
             <div className="col-lg-7 column">
@@ -312,63 +426,101 @@ class NewProject extends Component {
                 <tbody>
                   {this.state.rowsEC.map((item, idx) => (
                     <tr id="addr0" key={idx} style={{height: 47}}>
-                      <td style={{width: '18%'}}>
-                        <SplitButton            
+                      <td>
+                        <DropdownButton            
                           id="dropdown-basic-button" 
-                          title={this.state.rowsEC[idx].dropDownValue}
+                          title={item.position}
                           type='button'
+                          disabled={item.equipment!==''}
                         >
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>PM</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>SA</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>AP</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, idx, 'dropDownValue')}>P</div></Dropdown.Item>
-                        </SplitButton>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>Position</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>PM</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>SA</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>AP</div></Dropdown.Item>
+                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>P</div></Dropdown.Item>
+                        </DropdownButton>
                       </td>
                       <td style={{ width: '5%'}}>
                         <div style={{fontsize: 16}}>
                           OR
                         </div>
                       </td>
-                      <td style={{width: '25%'}}>
+                      <td style={{width: '34%'}}>
                         <input
                           type="text"
                           name="equipment"
-                          value={this.state.rowsEC[idx].equipment}
-                          onChange={(e) => this.handleChangeEC(e.target.value, idx, e.target.name)}
+                          value={item.equipment}
+                          onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
                           className="form-control"
                           placeholder='Equipment'
-                          disabled={this.state.rowsEC[idx].dropDownValue!='Position'}
+                          disabled={item.position!=='Position'}
                         />
                       </td>
                       <td style={{width: '20%'}}>
                         <input
                           type="number"
-                          name="quantity"
-                          value={this.state.rowsEC[idx].quantity}
-                          onChange={(e) => this.handleChangeEC(e.target.value, idx, e.target.name)}
+                          // name={this.onChangeQuantityName(item)}
+                          // value={this.onChangeQuantityValue(item)}
+                          name='quantity'
+                          value={item.quantity}
+                          onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
                           className="form-control"
                           placeholder='Quantity'
+                          min='1'
                         />
                       </td>
                       <td style={{width: '25%'}}>
-                        <div class="input-group">
-                          <div class='input-group-prepend'>
-                            <div class='input-group-text'>$</div>
+                        <div className="input-group">
+                          <div className='input-group-prepend'>
+                            <div className='input-group-text'>$</div>
                           </div>
                           <input
                             type="number"
                             name="cost"
-                            value={this.state.rowsEC[idx].cost}
-                            onChange={(e) => this.handleChangeEC(e.target.value, idx, e.target.name)}
+                            value={item.cost}
+                            onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
                             className="form-control"
                             placeholder='Cost'
-                            disabled={this.state.rowsEC[idx].dropDownValue!='Position'}
+                            disabled={item.position!=='Position'}
                           />
                         </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
+                <tfoot>
+                  {(Array.isArray(this.state.rowsEC) && this.state.rowsEC.length)?
+                    (
+                      <tr style={{height: 47}}>
+                        <td/>
+                        <td/>
+                        <td/>
+                        <td>
+                          <input
+                            type="text"
+                            value='Total Cost :  '
+                            className="form-control-plaintext"
+                            style={{textAlign: 'right'}}
+                            readOnly
+                          />
+                        </td>
+                        <td>
+                          <div className="input-group">
+                            <div className='input-group-prepend'>
+                              <div className='input-group-text'>$</div>
+                            </div>
+                            <input
+                              type="number"
+                              value={this.state.totalCost}
+                              className="form-control"
+                              disabled
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ):null
+                  }
+                </tfoot>
               </table>
             </div>
             <div>
@@ -390,7 +542,7 @@ class NewProject extends Component {
             </div>
           </div>
 
-
+{/* Submit */}
           <input 
             type="submit" 
             className="btn btn-outline-primary btn-block"
