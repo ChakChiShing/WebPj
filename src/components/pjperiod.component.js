@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import 'fontsource-roboto';
-import '@devexpress/dx-react-chart-bootstrap4/dist/dx-react-chart-bootstrap4.css';
 import { Table, TableBody, TableCell, TableRow, TableHead} from '@material-ui/core';
 
 function createData(name, calories, fat, carbs, protein) {
