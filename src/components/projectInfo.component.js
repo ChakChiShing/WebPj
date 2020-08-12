@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import 'fontsource-roboto';
-import '@devexpress/dx-react-chart-bootstrap4/dist/dx-react-chart-bootstrap4.css';
 import { TextField,  Box, Button, Grid} from '@material-ui/core';
 import PjPeriod from './pjperiod.component';
 import Staff from './staff.component';
