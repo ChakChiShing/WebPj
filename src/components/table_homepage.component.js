@@ -41,6 +41,11 @@ const project_Info = [
     }
 ];
 
+// const rowEvents = {
+//     onClick: (e, row, rowIndex) => {
+//         return (<div><a href={"/project/"+row.Project_id}></a></div>);
+//     }
+//   };
 
 export default class TableHome extends Component {
     constructor(props) {
@@ -52,12 +57,16 @@ export default class TableHome extends Component {
             //         <Link to="/project/"></Link>
             //     </Route>
             // },
-            onRowClick: function(row) {
-                alert(`You click row id: ${row.Project_id}`);
-              },
+            // onRowClick: function(row) {
+            //     alert(`You click row id: ${row.Project_id}`);
+            //   },
 
             sortIndicator: true
         };
+      }
+
+      CellFormatter(cell, row) {
+        return (<div><a color='#fff' href={"/project/"+row.Project_id}>{cell}</a></div>);
       }
 
     render() {
@@ -65,7 +74,7 @@ export default class TableHome extends Component {
             <div>
 
 <BootstrapTable data={project_Info} pagination striped hover options={this.options}>
-      <TableHeaderColumn isKey dataField='projectName' dataSort filter={ { type: 'TextFilter', delay: 1000 } }>Product</TableHeaderColumn>
+      <TableHeaderColumn isKey dataField='projectName' dataSort dataFormat={this.CellFormatter} filter={ { type: 'TextFilter', delay: 1000 } }>Product</TableHeaderColumn>
       <TableHeaderColumn dataField='CustomerName' dataSort filter={ { type: 'TextFilter', delay: 1000 } }>Customer Name</TableHeaderColumn>
       <TableHeaderColumn dataField='Position_PM' dataSort filter={ { type: 'TextFilter', delay: 1000 } }>PM</TableHeaderColumn>
       <TableHeaderColumn dataField='CurrentPeriod' dataSort>Period</TableHeaderColumn>
