@@ -1,37 +1,47 @@
 import React, {Component} from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import CreateTodo from "./components/create-todo.component";
-import TodosList from "./components/todos-list.component";
-import ProjectInfo from "./components/projectInfo.component";
-import EditPJInfo from "./components/editPj.component";
+import {Bar} from 'react-chartjs-2';
 
-class App extends Component  {
-  render() {
-    return (
-      <Router> 
-        <div className="container">
-        <nav className="navbar navbar-inverse">
-            <div className="container-fluid"> 
-              <div class ="navbar-header">
-                
-                <b><h5>Project Monitoring </h5></b>
-              </div>
-                  <ul className="nav nabar-nav navbar-right"> 
-                    <li className="navbar-item"><Link to="/" className="nav-link">Home</Link></li>
-                    <li className="navbar-item"><Link to="/create" className="nav-link">Create New Project</Link></li>
-                  </ul> 
+export default class ECChart extends Component {
+    constructor(props){
+        super(props);
+        this.state ={
+            chartData:{
+                labels:['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
+                datasets:[
+                    {
+                        label:'Actual Cost',
+                        data:[
+                            374572,
+                            123525,
+                            364363,
+                            346346,
+                            23423,
+                            254662
+                        ],
+                        backgroundColor:[
+                            '#339EFF',
+                            '#339EFF',
+                            '#339EFF',
+                            '#339EFF',
+                            '#339EFF',
+                            '#339EFF',
+                            '#339EFF',
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+    render() {
+        return(
+            <div className="chart" style={{width:350, height:300}}>
+                <Bar 
+                    data={this.state.chartData}
+                    width={10}
+                    height={10}
+                    options={{}}
+                />
             </div>
-          </nav>
-          
-          <Route path="/" exact component={TodosList} />
-          <Route path="/create" component={CreateTodo} />
-          <Route path="/project/:id" component={ProjectInfo} />
-          <Route path="/edit/:id" component={EditPJInfo} />
-        </div>
-      </Router>
-    );
-  }
+        );
+    }
 }
-
-export default App;
