@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { CreateCheckbox, DateInput, NameInput, CostInput } from './functions';
+import { CreateCheckbox, DateInput, NameInput, CostInput, QuantityInput } from './functions';
 import './edit.css';
+
 
 class Edit extends Component {
   constructor(props){
@@ -35,13 +36,14 @@ class Edit extends Component {
           {period: 'Nursing', option: false}, 
           {period: 'SM&S', option: false}, 
         ], 
-        totalCost: 0, 
+        cost: 0, 
       }],
       rowsOC: [{
-        equipment: "",
+        equipment: '',
         quantity: '', 
-        cost: '',
+        cost: 0,
       }],
+      totalCost: '', 
     }
   }
 //handle input change
@@ -72,7 +74,7 @@ class Edit extends Component {
         {period: 'Nursing', option: false}, 
         {period: 'SM&S', option: false}, 
       ], 
-      totalCost: 0, 
+      cost: 0, 
     };
     this.setState({
       rowsTM: [...this.state.rowsTM, item]
@@ -83,7 +85,7 @@ class Edit extends Component {
     const obj = {
       equipment: "",
       quantity: '', 
-      cost: '',
+      cost: 0,
     };
     this.setState({
       rowsOC: [...this.state.rowsOC, obj]
@@ -109,18 +111,18 @@ class Edit extends Component {
     alert('submitted');
   }
 
-DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
-  const oneDay = 24 * 60 * 60 * 1000;
-  const firstDate = new Date (startYYYY, startMM, startDD);
-  const secondDate = new Date (endYYYY, endMM, endDD);
+  // componentDidUpdate = (prevProps, prevState) => {
+  //   if(this.props.rowsTM !== prevProps.rowsTM || this.state.rowsOC !== prevState.rowsOC){
+  //     this.setState({
+  //       totalCost: (this.state.rowsTM.reduce((accumulator, currentValue) => accumulator + currentValue)+this.state.rowsOC.reduce((accumulator, currentValue) => accumulator + currentValue)).toString()
+  //     })
+  //   }
+  // }
 
-  const dateDiff = Math.round(Math.abs((firstDate - secondDate)/ oneDay));
-  return dateDiff;
-}
 
 
   render() {
-    console.log(this.state.checkbox)
+
     return (
       <div style={{marginTop: 20}}>
         <h3>Edit Project</h3>
@@ -139,7 +141,7 @@ DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
               <div className='input-group'>
                 <NameInput placeholder='Last Name' value={this.state.customer.lastName} name='lastName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
                 <NameInput placeholder='First Name' value={this.state.customer.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
-                <NameInput placeholder='Organization' value={this.state.customer.organization} name='organization' func={this.handleObjectChange} obj={this.state.customer}/>
+                <NameInput placeholder='Organization' value={this.state.customer.organization} name='organization' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
               </div>
             </div>
           </div>
@@ -224,9 +226,7 @@ DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
                         </td>
                       </tr>
                       <tr>
-                        <td/>
-                        <td/>
-                        <td/>
+                        <td/><td/><td/>
                         <td>
                           <table className='table-borderless'>
                             <tbody>
@@ -236,17 +236,7 @@ DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
                                 </td>
                                 <td>
                                   <div className="input-group">
-                                    <div className='input-group-prepend'>
-                                      <div className='input-group-text'>$</div>
-                                    </div>
-                                    {/* {item.checkboxTM.map((element, elementIdx) => {
-                                      element.option
-                                      ? {this.DateDiff(this.state.checkbox.startYYYY, this.state.checkbox.startMM, this.state.checkbox.startDD, this.state.checkbox.endYYYY, this.state.checkbox.endMM, this.state.checkbox.endDD)}
-                                      : null
-                                    })} */}
-                                    <input type="number" className="form-control" disabled
-                                      value={this.state.totalCost}
-                                    />
+                                    <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
                                   </div>
                                 </td>
                               </tr>
@@ -277,15 +267,13 @@ DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
                   {this.state.rowsOC.map((item, idx) => (
                     <tr id={`rowsOC${idx}`} key={`rowsOC${idx}`} style={{height: 45}}>
                       <td>
-                        <NameInput placeholder='Equipment' value={item.equipment} name='equipment' func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                        <NameInput value={item.equipment} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
                       <td style={{width: '24%'}}>
-                        <input type="number" name='quantity' className="form-control" placeholder='Quantity' min='1'
-                          value={item.quantity} onChange={(e) => this.handleObjectChange(e.target.name, e.target.value, this.state.rowsOC, item)}
-                        />
+                        <QuantityInput value={item.quantity} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
                       <td style={{width: '30%'}}>
-                        <CostInput placeholder='Cost' value={item.cost} name='cost' func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                        <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
                     </tr>
                   ))}
@@ -305,7 +293,7 @@ DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
                           type="number"
                           value={this.state.totalCost}
                           className="form-control"
-                          disabled
+                          readOnly
                         />
                       </div>
                     </td>
