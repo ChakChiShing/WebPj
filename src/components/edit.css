@@ -1,0 +1,9 @@
+.border-width {
+  border-top-style: solid;
+  border-width: 3px;
+  border-color: #606269
+};
+
+.padding {
+  padding-top: 30px;
+}
