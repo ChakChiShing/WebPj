@@ -1,171 +1,145 @@
 import React, { Component } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Dropdown, DropdownButton } from 'react-bootstrap'
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { CreateCheckbox, DateInput, NameInput, CostInput } from './functions';
+import './edit.css';
 
-class NewProject extends Component {
+class Edit extends Component {
   constructor(props){
     super(props);
     this.state = {
-      projectName: '',
-      costumerLastName: '',
-      costumerFirstName: '',  
+      projectName: '',  
       projectSelling: '', 
-      dateDD: '', 
-      dateMM: '', 
-      dateYYYY: '', 
-      rowsTM: [],
-      rowsEC: [],
-      totalCost: '',
-      // error: {}, 
+      customer: {
+        lastName: '', 
+        firstName: '', 
+        organization: '',
+      }, 
+      checkbox: [
+        {period: 'SA&D', option: false}, 
+        {period: 'SI&I', option: false}, 
+        {period: 'UAT', option: false},
+        {period: 'Prod. Rol.', option: false}, 
+        {period: 'Nursing', option: false}, 
+        {period: 'SM&S', option: false},
+      ],
+      rowsTM: [{
+        lastName: '',
+        firstName: '', 
+        position: 'Position', 
+        checkboxTM: [
+          {period: 'SA&D', option: false}, 
+          {period: 'SI&I', option: false}, 
+          {period: 'UAT', option: false}, 
+          {period: 'Prod. Rol.', option: false}, 
+          {period: 'Nursing', option: false}, 
+          {period: 'SM&S', option: false}, 
+        ], 
+        totalCost: 0, 
+      }],
+      rowsOC: [{
+        equipment: "",
+        quantity: '', 
+        cost: '',
+      }],
     }
   }
-  // validation = (name) => {
-  //   let error = this.state.error;
-
-  //   if(this.state.projectName === ''){
-  //     error[name] = 'Form cannot be epmty';
-  //   }
-
-  //   this.setState({error: error});
-  //   console.log(error)
-  // }
 //handle input change
-  handleChange = (name, value) => {
+  handleInputChange = (name, value) => {
     this.setState({
       [name]: value
     })
   }
-//handle Team member change
-  handleChangeTM = (value, item, name) => {
-    const rowsTM = [...this.state.rowsTM];
-    item[name] = value;
+//handle object change
+  handleObjectChange = (name, value, obj, element) => {
+    const _obj = obj;
+    element[name] = value;
     this.setState({
-      rowsTM: rowsTM
-    });
-  };
-  handleAddRowTM = () => {
+      [obj]: _obj
+    })
+  }
+//handle team member change
+  AddRowTM = () => {
     const item = {
-      lastName: "",
+      lastName: '',
       firstName: '', 
-      workingHour: '', 
-      option1: false, 
-      option2: false, 
-      option3: false, 
-      option4: false, 
-      option5: false, 
-      option6: false, 
+      position: 'Position', 
+      checkboxTM: [
+        {period: 'SA&D', option: false}, 
+        {period: 'SI&I', option: false}, 
+        {period: 'UAT', option: false}, 
+        {period: 'Prod. Rol.', option: false}, 
+        {period: 'Nursing', option: false}, 
+        {period: 'SM&S', option: false}, 
+      ], 
+      totalCost: 0, 
     };
     this.setState({
       rowsTM: [...this.state.rowsTM, item]
     });
   };
-  handleRemoveRowTM = () => {
-    this.setState({
-      rowsTM: this.state.rowsTM.slice(0, -1)
-    });
-  };
-//handle expected cost change
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.rowsEC !== this.state.rowsEC){
-      this.totalCost();
-    }
-    // if (prevState.projectName !== this.state.projectName){
-    //   this.validation('projectName');
-    // }
-  }
-  totalCost = () => {
-    let total = 0;
-    this.state.rowsEC.map(item => {
-      if(!isNaN(parseInt(item.cost))){
-        total += parseInt(item.cost);
-      }
-    })
-    if(total === 0) total = '';
-    this.setState({totalCost: total})
-  }
-  handleChangeEC = (value, item, name) => {
-    const rowsEC = [...this.state.rowsEC];
-    item[name] = value;
-    if(name === 'position') {
-      item.equipment = '';
-      item.cost = '';
-    }
-    if(item.position === 'PM' && !isNaN(parseInt(item['quantity']))){
-      item['cost'] = (parseInt(item['quantity'])*2500).toString();
-    } else if(item.position === 'SA' && !isNaN(parseInt(item['quantity']))){
-      item['cost'] = (parseInt(item['quantity'])*2000).toString();
-    } else if(item.position === 'AP' && !isNaN(parseInt(item['quantity']))){
-      item['cost'] = (parseInt(item['quantity'])*1500).toString();
-    } else if(item.position === 'P' && !isNaN(parseInt(item['quantity']))){
-      item['cost'] = (parseInt(item['quantity'])*1000).toString();
-    }
-    this.setState({
-      rowsEC: rowsEC
-    });
-  }
-  handleAddRowEC = () => {
+//handle other cost change
+  AddRowOC = () => {
     const obj = {
       equipment: "",
       quantity: '', 
       cost: '',
-      position: 'Position', 
     };
     this.setState({
-      rowsEC: [...this.state.rowsEC, obj]
+      rowsOC: [...this.state.rowsOC, obj]
     });
   };
-  handleRemoveRowEC = () => {
-    this.setState({rowsEC: this.state.rowsEC.slice(0, -1)});
+//remove row
+  RemoveRow = (name, obj) => {
+    this.setState({
+      [name]: obj.slice(0, -1)
+    });
   };
+//disable delete botton
+  Disable = (obj) => {
+    if(obj.length <= 1){
+      return true;
+    } else {
+      return false;
+    }
+  }
 //handle submit
   onSubmit = (e) => {
     e.preventDefault();
     alert('submitted');
   }
 
+DateDiff = (startYYYY, startMM, startDD, endYYYY, endMM, endDD) => {
+  const oneDay = 24 * 60 * 60 * 1000;
+  const firstDate = new Date (startYYYY, startMM, startDD);
+  const secondDate = new Date (endYYYY, endMM, endDD);
+
+  const dateDiff = Math.round(Math.abs((firstDate - secondDate)/ oneDay));
+  return dateDiff;
+}
+
 
   render() {
-    // console.log(this.state.totalCost)
+    console.log(this.state.checkbox)
     return (
       <div style={{marginTop: 20}}>
-        <h3>Create New Project</h3>
+        <h3>Edit Project</h3>
         <form onSubmit={this.onSubmit}>
 {/* project name */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Project Name</label>
             <div className='col-lg-7'>
-              <input  
-                type="text" 
-                className="form-control" 
-                value={this.state.projectName}
-                name='projectName'
-                onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                placeholder='Project Name'
-              />
-              {/* <span style={{color: 'red'}}>{this.state.error['projectName']}</span> */}
+              <NameInput placeholder='Project Name' value={this.state.projectName} name='projectName' func={this.handleInputChange} obj={null} elem={null}/>
             </div>
           </div>
 {/* customer name */}
           <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Customer Name</label>
+            <label className='col-lg-2 col-form-label'>Customer Info.</label>
             <div className='col-lg-7'>
               <div className='input-group'>
-                <input  
-                  type="text" 
-                  className="form-control" 
-                  value={this.state.customerLastName}
-                  name='customerLastName'
-                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                  placeholder='Last Name'
-                />
-                <input  
-                  type="text" 
-                  className="form-control" 
-                  value={this.state.customerFirstName}
-                  name='customerFirstName'
-                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                  placeholder='First Name'
-                />
+                <NameInput placeholder='Last Name' value={this.state.customer.lastName} name='lastName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
+                <NameInput placeholder='First Name' value={this.state.customer.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
+                <NameInput placeholder='Organization' value={this.state.customer.organization} name='organization' func={this.handleObjectChange} obj={this.state.customer}/>
               </div>
             </div>
           </div>
@@ -173,386 +147,195 @@ class NewProject extends Component {
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Project Selling</label>
             <div className='col-lg-7'>
-              <div className="input-group">
-                <div className='input-group-prepend'>
-                  <div className='input-group-text'>$</div>
-                </div>
-                <input 
-                  type="number" 
-                  className="form-control" 
-                  value={this.state.projectSelling}
-                  name='projectSelling'
-                  onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                  placeholder='Amount'
-                />
-              </div>
+              <CostInput placeholder='Amount' value={this.state.projectSelling} name='projectSelling' func={this.handleInputChange} obj={null} elem={null}/>
+            </div>
+          </div>
+{/* period */}
+          <div className='form-group row'>
+            <label className='col-lg-2 col-form-label'>Period</label>
+            <div className='col-lg-7' style={{marginTop: 6}}>
+              {this.state.checkbox.map((element, idx) => {
+                return(
+                  <React.Fragment key={`-1${idx}`}>
+                    <CreateCheckbox checkbox={this.state.checkbox} func={this.handleObjectChange} isInitialPeriod={true} 
+                    dis={null} elem={element} idx={idx} period={element.period} option={element.option} unique='-1'/>
+                  </React.Fragment>
+                )
+              })}
             </div>
           </div>
 {/* start date */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Start Date</label>
-            <div className='col-lg-6'>
-              <table className='table-borderless'>
-                <tbody>
-                  <tr>
-                    <td>
-                      <input  
-                        type="number" 
-                        className="form-control" 
-                        value={this.state.dateDD}
-                        name='dateDD'
-                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                        placeholder='DD'
-                        max='31'
-                        min='1'
-                      />
-                    </td>
-                    <td>
-                      <input  
-                        type="number" 
-                        className="form-control" 
-                        value={this.state.dateMM}
-                        name='dateMM'
-                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                        placeholder='MM'
-                        max='12'
-                        min='1'
-                      />
-                    </td>
-                    <td>
-                      <input  
-                        type="number" 
-                        className="form-control" 
-                        value={this.state.dateYYYY}
-                        name='dateYYYY'
-                        onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-                        placeholder='YYYY'
-                        min='2000'
-                        max='3000'
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>                
-{/* Team Member */}
+          {this.state.checkbox.map((element, idx) => {
+            return(
+              element.option
+              ? (
+                <div className='form-group row' key={`Date${idx}`}>
+                  <label className='col-lg-2 col-form-label'>{`Start Date (${element.period})`}</label>
+                  <DateInput
+                    DD={element.startDD} MM={element.startMM} YYYY={element.startYYYY}
+                    nameDD='startDD' nameMM='startMM' nameYYYY='startYYYY' func={this.handleObjectChange}
+                    checkbox={this.state.checkbox} element={element}
+                  />
+                  <label className='col-lg-1 col-form-label'>{`End Date`}</label>
+                  <DateInput 
+                    DD={element.endDD} MM={element.endMM} YYYY={element.endYYYY}
+                    nameDD='endDD' nameMM='endMM' nameYYYY='endYYYY' func={this.handleObjectChange}
+                    checkbox={this.state.checkbox} element={element}
+                  />
+                </div>
+              )
+              : null
+            ) 
+          })}
+{/* team member */}
           <div className="form-group row">
             <label className='col-lg-2 col-form-label'>Team Member</label>
             <div className="col-lg-7 column">
-              <table
-                className="table-borderless table-hover"
-                id="tab_logic"
-                style={{width: '100%'}}
-              >
+              <table className="table-borderless" id="tab_logic">
                 <tbody>
-                  {this.state.rowsTM.map((item, idx) => (
-                    <tr id="addr0" key={idx}>
-                      <td style={{width: '45%'}}>
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            name="lastName"
-                            value={item.lastName}
-                            onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
-                            className="form-control"
-                            placeholder='Last Name'
-                          />
-                          <input
-                            type="text"
-                            name="firstName"
-                            value={item.firstName}
-                            onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
-                            className="form-control"
-                            placeholder='First Name'
-                          />
-                        </div>
-                      </td>
-                      <td style={{width: '15%'}}>
-                        <input
-                          type="number"
-                          name="workingHour"
-                          value={item.workingHour}
-                          onChange={(e) => this.handleChangeTM(e.target.value, item, e.target.name)}
-                          className="form-control"
-                          placeholder='Hour'
-                          min='1'
-                        />
-                      </td>
-                      <td
-                        style={{width: '40%'}}
-                      >
-                        <div style={{marginLeft: 7, paddingRight: 0, marginRight: 0}}>
+                  {this.state.rowsTM.map((item, itemIdx) => (
+                    <React.Fragment key={`rowsTM${itemIdx}`}>
+                      <tr id={`rowsTM${itemIdx}`}>
+                        <td style={{width: '17%'}}>
+                          <NameInput placeholder='Last Name' value={this.state.rowsTM.lastName} name='lastName' func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
+                        </td>
+                        <td style={{width: '29%'}}>
+                          <NameInput placeholder='First Name' value={this.state.rowsTM.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
+                        </td>
+                        <td style={{width: '16%'}}>
+                          <DropdownButton id="dropdown-basic-button" type='button' title={item.position}>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>PM</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>SA</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>AP</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>P</div></Dropdown.Item>
+                          </DropdownButton>
+                        </td>
+                        <td>
                           <div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '1'}
-                                name="option1"
-                                checked={item.option1}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '1'}
-                                style={{fontSize: 13}}
-                              >
-                                SA&D
-                              </label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '2'}
-                                name="option2"
-                                checked={item.option2}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '2'}
-                                style={{fontSize: 13}}
-                              >
-                                SI&I
-                              </label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '3'}
-                                name="option3"
-                                checked={item.option3}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '3'}
-                                style={{fontSize: 13}}
-                              >
-                                UAT
-                              </label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '4'}
-                                name="option4"
-                                checked={item.option4}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '4'}
-                                style={{fontSize: 13}}
-                              >
-                                SM&S
-                              </label>
-                            </div>
+                            {item.checkboxTM.map((element, elementIdx) => {
+                              return(
+                                <React.Fragment key={`${itemIdx}${elementIdx}`}>
+                                  <CreateCheckbox checkbox={item.checkboxTM} func={this.handleObjectChange} isInitialPeriod={false} 
+                                  dis={this.state.checkbox[elementIdx]['option']} elem={element} idx={elementIdx} period={element.period} option={element.option} unique={itemIdx}/>
+                                </React.Fragment>
+                              )
+                            })}
                           </div>
-                          <div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '5'}
-                                name="option5"
-                                checked={item.option5}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '5'}
-                                style={{fontSize: 13}}
-                              >
-                                Production Rolling
-                              </label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <input 
-                                className="form-check-input" 
-                                type="checkbox" 
-                                id={idx + '6'}
-                                name="option6"
-                                checked={item.option6}
-                                onChange={(e) => this.handleChangeTM(e.target.checked, item, e.target.name)}
-                              />
-                              <label 
-                                className="form-check-label" 
-                                htmlFor={idx + '6'}
-                                style={{fontSize: 13}}
-                              >
-                                Nursing
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td/>
+                        <td/>
+                        <td/>
+                        <td>
+                          <table className='table-borderless'>
+                            <tbody>
+                              <tr>
+                                <td style={{width: '21%'}}>
+                                  <input type="text" className="form-control-plaintext" style={{textAlign: 'right'}} value='Cost :  ' readOnly/>
+                                </td>
+                                <td>
+                                  <div className="input-group">
+                                    <div className='input-group-prepend'>
+                                      <div className='input-group-text'>$</div>
+                                    </div>
+                                    {/* {item.checkboxTM.map((element, elementIdx) => {
+                                      element.option
+                                      ? {this.DateDiff(this.state.checkbox.startYYYY, this.state.checkbox.startMM, this.state.checkbox.startDD, this.state.checkbox.endYYYY, this.state.checkbox.endMM, this.state.checkbox.endDD)}
+                                      : null
+                                    })} */}
+                                    <input type="number" className="form-control" disabled
+                                      value={this.state.totalCost}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
             </div>
             <div>
-              <button
-                onClick={this.handleAddRowTM}
-                className="btn btn-outline-secondary"
-                style={{marginRight: 10}}
-                type='button'
-              >
+              <button type='button' className="btn btn-outline-secondary" style={{marginRight: 10}} onClick={this.AddRowTM}>
                 Add Member
               </button>
-              <button
-                onClick={this.handleRemoveRowTM}
-                className="btn btn-outline-danger"
-                type='button'
-              >
+              <button type='button' className="btn btn-outline-danger" name='rowsTM' onClick={e => this.RemoveRow(e.target.name, this.state.rowsTM)} disabled={this.Disable(this.state.rowsTM)}>
                 Delete
               </button>
             </div>
           </div>
-{/* Expected Cost */}
+{/* other cost */}
           <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Expected Cost</label>
+            <label className='col-lg-2 col-form-label'>Other Cost</label>
             <div className="col-lg-7 column">
-              <table
-                className="table-borderless table-hover"
-                id="tab_logic"
-                style={{width: '100%'}}
-              >
+              <table className="table-borderless" id="tab_logic">
                 <tbody>
-                  {this.state.rowsEC.map((item, idx) => (
-                    <tr id="addr0" key={idx} style={{height: 47}}>
+                  {this.state.rowsOC.map((item, idx) => (
+                    <tr id={`rowsOC${idx}`} key={`rowsOC${idx}`} style={{height: 45}}>
                       <td>
-                        <DropdownButton            
-                          id="dropdown-basic-button" 
-                          title={item.position}
-                          type='button'
-                          disabled={item.equipment!==''}
-                        >
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>Position</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>PM</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>SA</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>AP</div></Dropdown.Item>
-                          <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleChangeEC(e.target.textContent, item, 'position')}>P</div></Dropdown.Item>
-                        </DropdownButton>
+                        <NameInput placeholder='Equipment' value={item.equipment} name='equipment' func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
-                      <td style={{ width: '5%'}}>
-                        <div style={{fontsize: 16}}>
-                          OR
-                        </div>
-                      </td>
-                      <td style={{width: '34%'}}>
-                        <input
-                          type="text"
-                          name="equipment"
-                          value={item.equipment}
-                          onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
-                          className="form-control"
-                          placeholder='Equipment'
-                          disabled={item.position!=='Position'}
+                      <td style={{width: '24%'}}>
+                        <input type="number" name='quantity' className="form-control" placeholder='Quantity' min='1'
+                          value={item.quantity} onChange={(e) => this.handleObjectChange(e.target.name, e.target.value, this.state.rowsOC, item)}
                         />
                       </td>
-                      <td style={{width: '20%'}}>
-                        <input
-                          type="number"
-                          // name={this.onChangeQuantityName(item)}
-                          // value={this.onChangeQuantityValue(item)}
-                          name='quantity'
-                          value={item.quantity}
-                          onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
-                          className="form-control"
-                          placeholder='Quantity'
-                          min='1'
-                        />
-                      </td>
-                      <td style={{width: '25%'}}>
-                        <div className="input-group">
-                          <div className='input-group-prepend'>
-                            <div className='input-group-text'>$</div>
-                          </div>
-                          <input
-                            type="number"
-                            name="cost"
-                            value={item.cost}
-                            onChange={(e) => this.handleChangeEC(e.target.value, item, e.target.name)}
-                            className="form-control"
-                            placeholder='Cost'
-                            disabled={item.position!=='Position'}
-                          />
-                        </div>
+                      <td style={{width: '30%'}}>
+                        <CostInput placeholder='Cost' value={item.cost} name='cost' func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
-                  {(Array.isArray(this.state.rowsEC) && this.state.rowsEC.length)?
-                    (
-                      <tr style={{height: 47}}>
-                        <td/>
-                        <td/>
-                        <td/>
-                        <td>
-                          <input
-                            type="text"
-                            value='Total Cost :  '
-                            className="form-control-plaintext"
-                            style={{textAlign: 'right'}}
-                            readOnly
-                          />
-                        </td>
-                        <td>
-                          <div className="input-group">
-                            <div className='input-group-prepend'>
-                              <div className='input-group-text'>$</div>
-                            </div>
-                            <input
-                              type="number"
-                              value={this.state.totalCost}
-                              className="form-control"
-                              disabled
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    ):null
-                  }
+                <tfoot className='border-width'> 
+                  <tr style={{height: 47}}>
+                    <td/>
+                    <td>
+                      <input type="text" className="form-control-plaintext" style={{textAlign: 'right'}} value='Total Cost :  ' readOnly/>
+                    </td>
+                    <td>
+                      <div className="input-group">
+                        <div className='input-group-prepend'>
+                          <div className='input-group-text'>$</div>
+                        </div>
+                        <input
+                          type="number"
+                          value={this.state.totalCost}
+                          className="form-control"
+                          disabled
+                        />
+                      </div>
+                    </td>
+                  </tr>
                 </tfoot>
               </table>
             </div>
             <div>
-              <button
-                onClick={this.handleAddRowEC}
-                className="btn btn-outline-secondary"
-                style={{marginRight: 10}}
-                type='button'
-              >
+              <button type='button' className="btn btn-outline-secondary" style={{marginRight: 10}} onClick={this.AddRowOC}>
                 Add Item
-              </button>
-              <button
-                onClick={this.handleRemoveRowEC}
-                className="btn btn-outline-danger"
-                type='button'
-              >
+              </button> 
+              <button type='button' className="btn btn-outline-danger" name='rowsOC' onClick={e => this.RemoveRow(e.target.name, this.state.rowsOC)} disabled={this.Disable(this.state.rowsOC)}>
                 Delete
               </button>
             </div>
           </div>
-
 {/* Submit */}
-          <input 
-            type="submit" 
-            className="btn btn-outline-primary btn-block"
-            value='Submit'
-          >
-          </input>
+          <div className='row'>
+            <div className='offset-lg-2 col-lg-7'>
+              <input 
+                type="submit" 
+                className="btn btn-outline-primary btn-block"
+                value='Submit'
+              />
+            </div>
+          </div>
         </form>
       </div>
     )
   }
 }
 
-export default NewProject;
+export default Edit;
