@@ -133,7 +133,7 @@ class Edit extends Component {
   render() {
     return (
       <div>
-        <h3>Edit Project</h3>
+        <h3 style={{marginBottom: 20}}>Edit Project</h3>
         <form onSubmit={this.onSubmit}>
 {/* project name */}
           <div className="form-group row">
