@@ -99,7 +99,8 @@ class CreateNewProject extends Component {
 //remove row
   RemoveRow = (name, obj) => {
     this.setState({
-      [name]: obj.slice(0, -1)
+      [name]: obj.slice(0, -1), 
+      totalCost: ''
     });
   };
 //disable delete botton
@@ -325,4 +326,4 @@ class CreateNewProject extends Component {
   }
 }
 
-export default CreaetNewProject;
+export default CreateNewProject;
