@@ -132,7 +132,7 @@ class CreateNewProject extends Component {
 
   render() {
     return (
-      <div style={{marginTop: 20}}>
+      <div>
         <h3>Create New Project</h3>
         <form onSubmit={this.onSubmit}>
 {/* project name */}
