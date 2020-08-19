@@ -11,11 +11,13 @@ class Edit extends Component {
     this.state = {
       projectName: '',  
       projectSelling: '', 
+      //customer
       customer: {
         lastName: '', 
         firstName: '', 
         organization: '',
       }, 
+      //period
       checkbox: [
         {period: 'SA&D', option: false}, 
         {period: 'SI&I', option: false}, 
@@ -24,6 +26,7 @@ class Edit extends Component {
         {period: 'Nursing', option: false}, 
         {period: 'SM&S', option: false},
       ],
+      //Team Member
       rowsTM: [{
         lastName: '',
         firstName: '', 
@@ -38,11 +41,13 @@ class Edit extends Component {
         ], 
         cost: 0, 
       }],
+      //Other Cost
       rowsOC: [{
         equipment: '',
         quantity: '', 
         cost: 0,
       }],
+      //Total Cost 
       totalCost: '', 
     }
   }
@@ -105,24 +110,26 @@ class Edit extends Component {
       return false;
     }
   }
+//calculate total cost
+  calculate = () => {
+    const totalTM = this.state.rowsTM.reduce((accumulator, currentValue) => 
+      accumulator + parseInt(currentValue.cost)
+    , 0)
+    const totalOC = this.state.rowsOC.reduce((accumulator, currentValue) => 
+      accumulator + parseInt(currentValue.cost)
+    , 0)
+    this.setState({
+      totalCost: (totalTM + totalOC).toString()
+    })
+  }
 //handle submit
   onSubmit = (e) => {
     e.preventDefault();
     alert('submitted');
   }
 
-  // componentDidUpdate = (prevProps, prevState) => {
-  //   if(this.props.rowsTM !== prevProps.rowsTM || this.state.rowsOC !== prevState.rowsOC){
-  //     this.setState({
-  //       totalCost: (this.state.rowsTM.reduce((accumulator, currentValue) => accumulator + currentValue)+this.state.rowsOC.reduce((accumulator, currentValue) => accumulator + currentValue)).toString()
-  //     })
-  //   }
-  // }
-
-
 
   render() {
-
     return (
       <div style={{marginTop: 20}}>
         <h3>Edit Project</h3>
@@ -204,8 +211,8 @@ class Edit extends Component {
                         <td style={{width: '29%'}}>
                           <NameInput placeholder='First Name' value={this.state.rowsTM.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
                         </td>
-                        <td style={{width: '16%'}}>
-                          <DropdownButton id="dropdown-basic-button" type='button' title={item.position}>
+                        <td style={{width: '17%'}}>
+                          <DropdownButton id="dropdown-basic-button" type='button' title={item.position} style={{marginLeft: 5}}>
                             <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>PM</div></Dropdown.Item>
                             <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>SA</div></Dropdown.Item>
                             <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>AP</div></Dropdown.Item>
@@ -228,20 +235,9 @@ class Edit extends Component {
                       <tr>
                         <td/><td/><td/>
                         <td>
-                          <table className='table-borderless'>
-                            <tbody>
-                              <tr>
-                                <td style={{width: '21%'}}>
-                                  <input type="text" className="form-control-plaintext" style={{textAlign: 'right'}} value='Cost :  ' readOnly/>
-                                </td>
-                                <td>
-                                  <div className="input-group">
-                                    <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
-                                  </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                          <div className="input-group">
+                            <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
+                          </div>
                         </td>
                       </tr>
                     </React.Fragment>
@@ -266,13 +262,13 @@ class Edit extends Component {
                 <tbody>
                   {this.state.rowsOC.map((item, idx) => (
                     <tr id={`rowsOC${idx}`} key={`rowsOC${idx}`} style={{height: 45}}>
-                      <td>
-                        <NameInput value={item.equipment} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                      <td style={{width: '46%'}}>
+                        <NameInput placeholder='Equipment' name='equipment' value={item.equipment} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
-                      <td style={{width: '24%'}}>
+                      <td style={{width: '17%'}}>
                         <QuantityInput value={item.quantity} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
-                      <td style={{width: '30%'}}>
+                      <td>
                         <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
                       </td>
                     </tr>
@@ -282,7 +278,9 @@ class Edit extends Component {
                   <tr style={{height: 47}}>
                     <td/>
                     <td>
-                      <input type="text" className="form-control-plaintext" style={{textAlign: 'right'}} value='Total Cost :  ' readOnly/>
+                      <button type='button' className='btn btn-outline-primary' style={{marginLeft: 7}} onClick={this.calculate}>
+                        Calculate
+                      </button>
                     </td>
                     <td>
                       <div className="input-group">
@@ -291,6 +289,7 @@ class Edit extends Component {
                         </div>
                         <input
                           type="number"
+                          placeholder='Total Cost'
                           value={this.state.totalCost}
                           className="form-control"
                           readOnly
