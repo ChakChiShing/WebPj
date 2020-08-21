@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const Tracker = (props) => {
   return(
     <div>
-      <h2 style={{marginBottom: 20}}>Work Hours Tracker</h2>
+      <h2 style={{marginBottom: 20}}>Tracker</h2>
       <form>
         {props.checkbox.map((item, idx) => {
           return(
