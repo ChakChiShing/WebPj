@@ -135,7 +135,16 @@ class App extends Component  {
             />
           </Route>
           <Route path="/project/:id" component={ProjectInfo} />
-          <Route path="/edit/:id" component={EditPJInfo} />
+          <Route path="/edit/:id" />
+            <EditPJInfo checkbox={this.state.checkbox}
+                        rowsTM={this.state.rowsTM} 
+                        rowsOC={this.state.rowsOC} 
+                        AddRowTeamMember={this.AddRowTeamMember} 
+                        AddRowOtherCost={this.AddRowOtherCost} 
+                        RemoveRow={this.RemoveRow} 
+                        CalculateTotalCost={this.CalculateTotalCost}
+                        totalCost={this.state.totalCost}
+            />
           <Route path='/tracker'>
             <Tracker checkbox={this.state.checkbox}
                      rowsTM={this.state.rowsTM}
