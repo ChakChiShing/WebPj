@@ -105,7 +105,7 @@ const AddDelete = (props) => {
   )
 }
 
-class CreateNewProject extends Component {
+class Edit extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -147,7 +147,7 @@ class CreateNewProject extends Component {
   render() {
     return (
       <div>
-        <h2 style={{marginBottom: 20}}>Create New Project</h2>
+        <h2 style={{marginBottom: 20}}>Edit Project</h2>
         <form onSubmit={this.onSubmit}>
 {/* project name */}
           <FormRow label='Project Name'>
@@ -310,4 +310,4 @@ class CreateNewProject extends Component {
   }
 }
 
-export default CreateNewProject;
+export default Edit;
