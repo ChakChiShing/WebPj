@@ -1,9 +1,109 @@
 import React, { Component } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { CreateCheckbox, DateInput, NameInput, CostInput, QuantityInput } from './functions';
 import './edit.css';
 
+//components
+const Wrapper = (props) => {
+  return(
+    <div className='col-lg-7'>
+      {props.children}
+    </div>
+  )
+}
+const FormRow = (props) => {
+  return(
+    <div className="form-group row">
+      <label className='col-lg-2 col-form-label'>{props.label}</label>
+      {props.children}
+    </div>
+  )
+}
+const CreateCheckbox = (props) => {
+  return(
+    <div className='form-check form-check-inline'>
+      <input className='form-check-input' type='checkbox' id={`${props.unique}${props.idx}`}
+        name='option'
+        checked={props.option}
+        onChange={(e) => props.func(e.target.name, e.target.checked, props.obj, props.elem)}
+        disabled={props.isInitialPeriod
+                    ? null
+                    : !props.dis
+                  }
+      />
+      {props.isInitialPeriod
+        ? <label className='form-check-label' htmlFor={`${props.unique}${props.idx}`}>{props.period}</label>
+        : <label className='form-check-label' htmlFor={`${props.unique}${props.idx}`} style={{fontSize: 13}}>{props.period}</label>
+      }
+    </div>
+  )
+}
+const DateInput = (props) => {
+  return(
+    <div className='col-lg-3'>
+      <table className='table-borderless'>
+        <tbody>
+          <tr>
+            <td>
+              <div className='input-group'>
+                <input type="number" className="form-control" placeholder='DD' max='31' min='1'
+                  value={props.DD || ''} name={props.nameDD} onChange={(e) => props.func(e.target.name, e.target.value, props.checkbox, props.element)}
+                />
+                <input type="number" className="form-control" placeholder='MM'max='12'min='1'
+                  value={props.MM || ''} name={props.nameMM} onChange={(e) => props.func(e.target.name, e.target.value, props.checkbox, props.element)}
+                />
+                <input type="number" className="form-control" placeholder='YYYY' min='2000' max='3000'
+                  value={props.YYYY || ''} name={props.nameYYYY} onChange={(e) => props.func(e.target.name, e.target.value, props.checkbox, props.element)}
+                />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+const NameInput = (props) => {
+  return(
+    <input  type="text" className="form-control" placeholder={props.placeholder}
+      value={props.value} name={props.name}
+      onChange={(e) => props.func(e.target.name, e.target.value, props.obj, props.elem)}
+    />
+  )
+}
+const CostInput = (props) => {
+  return(
+    <div className="input-group">
+      <div className='input-group-prepend'>
+        <div className='input-group-text'>$</div>
+      </div>
+      <input type="number" className="form-control" placeholder={props.placeholder}
+        value={props.cost}
+        name='cost'
+        onChange={(e) => props.func(e.target.name, e.target.value, props.obj, props.elem)}
+      />
+    </div>
+  )
+}
+const QuantityInput = (props) => {
+  return(
+    <input type="number" name='quantity' className="form-control" placeholder='Quantity' min='1'
+      value={props.quantity} onChange={(e) => props.func(e.target.name, e.target.value, props.obj, props.elem)}
+    />
+  )
+}
+const AddDelete = (props) => {
+  return(
+    <div>
+      <button type='button' className="btn btn-outline-secondary" style={{marginRight: 10}} onClick={props.AddRow}>
+        Add Item
+      </button> 
+      <button type='button' className="btn btn-outline-danger" onClick={() => props.RemoveRow(props.name, props.obj)} disabled={props.Disable(props.obj)}>
+        Delete
+      </button>
+    </div>
+  )
+}
 
 class Edit extends Component {
   constructor(props){
@@ -11,53 +111,19 @@ class Edit extends Component {
     this.state = {
       projectName: '',  
       projectSelling: '', 
-      //customer
       customer: {
         lastName: '', 
         firstName: '', 
         organization: '',
       }, 
-      //period
-      checkbox: [
-        {period: 'SA&D', option: false}, 
-        {period: 'SI&I', option: false}, 
-        {period: 'UAT', option: false},
-        {period: 'Prod. Rol.', option: false}, 
-        {period: 'Nursing', option: false}, 
-        {period: 'SM&S', option: false},
-      ],
-      //Team Member
-      rowsTM: [{
-        lastName: '',
-        firstName: '', 
-        position: 'Position', 
-        checkboxTM: [
-          {period: 'SA&D', option: false}, 
-          {period: 'SI&I', option: false}, 
-          {period: 'UAT', option: false}, 
-          {period: 'Prod. Rol.', option: false}, 
-          {period: 'Nursing', option: false}, 
-          {period: 'SM&S', option: false}, 
-        ], 
-        cost: 0, 
-      }],
-      //Other Cost
-      rowsOC: [{
-        equipment: '',
-        quantity: '', 
-        cost: 0,
-      }],
-      //Total Cost 
-      totalCost: '', 
     }
   }
-//handle input change
+
   handleInputChange = (name, value) => {
     this.setState({
       [name]: value
     })
   }
-//handle object change
   handleObjectChange = (name, value, obj, element) => {
     const _obj = obj;
     element[name] = value;
@@ -65,65 +131,13 @@ class Edit extends Component {
       [obj]: _obj
     })
   }
-//handle team member change
-  AddRowTM = () => {
-    const item = {
-      lastName: '',
-      firstName: '', 
-      position: 'Position', 
-      checkboxTM: [
-        {period: 'SA&D', option: false}, 
-        {period: 'SI&I', option: false}, 
-        {period: 'UAT', option: false}, 
-        {period: 'Prod. Rol.', option: false}, 
-        {period: 'Nursing', option: false}, 
-        {period: 'SM&S', option: false}, 
-      ], 
-      cost: 0, 
-    };
-    this.setState({
-      rowsTM: [...this.state.rowsTM, item]
-    });
-  };
-//handle other cost change
-  AddRowOC = () => {
-    const obj = {
-      equipment: "",
-      quantity: '', 
-      cost: 0,
-    };
-    this.setState({
-      rowsOC: [...this.state.rowsOC, obj]
-    });
-  };
-//remove row
-  RemoveRow = (name, obj) => {
-    this.setState({
-      [name]: obj.slice(0, -1),
-      totalCost: ''
-    });
-  };
-//disable delete botton
-  Disable = (obj) => {
+  DisableDelete = (obj) => {
     if(obj.length <= 1){
       return true;
     } else {
       return false;
     }
   }
-//calculate total cost
-  calculate = () => {
-    const totalTM = this.state.rowsTM.reduce((accumulator, currentValue) => 
-      accumulator + parseInt(currentValue.cost)
-    , 0)
-    const totalOC = this.state.rowsOC.reduce((accumulator, currentValue) => 
-      accumulator + parseInt(currentValue.cost)
-    , 0)
-    this.setState({
-      totalCost: (totalTM + totalOC).toString()
-    })
-  }
-//handle submit
   onSubmit = (e) => {
     e.preventDefault();
     alert('submitted');
@@ -133,153 +147,136 @@ class Edit extends Component {
   render() {
     return (
       <div>
-        <h3 style={{marginBottom: 20}}>Edit Project</h3>
+        <h2 style={{marginBottom: 20}}>Edit Project</h2>
         <form onSubmit={this.onSubmit}>
 {/* project name */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Project Name</label>
-            <div className='col-lg-7'>
+          <FormRow label='Project Name'>
+            <Wrapper>
               <NameInput placeholder='Project Name' value={this.state.projectName} name='projectName' func={this.handleInputChange} obj={null} elem={null}/>
-            </div>
-          </div>
+            </Wrapper>
+          </FormRow>
 {/* customer name */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Customer Info.</label>
-            <div className='col-lg-7'>
+          <FormRow label='Customer Info.'>
+            <Wrapper>
               <div className='input-group'>
                 <NameInput placeholder='Last Name' value={this.state.customer.lastName} name='lastName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
                 <NameInput placeholder='First Name' value={this.state.customer.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
                 <NameInput placeholder='Organization' value={this.state.customer.organization} name='organization' func={this.handleObjectChange} obj={this.state.customer} elem={this.state.customer}/>
               </div>
-            </div>
-          </div>
+            </Wrapper>
+          </FormRow>
 {/* project selling */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Project Selling</label>
-            <div className='col-lg-7'>
+          <FormRow label='Project Selling'>
+            <Wrapper>
               <CostInput placeholder='Amount' value={this.state.projectSelling} name='projectSelling' func={this.handleInputChange} obj={null} elem={null}/>
-            </div>
-          </div>
+            </Wrapper>
+          </FormRow>
 {/* period */}
-          <div className='form-group row'>
-            <label className='col-lg-2 col-form-label'>Period</label>
-            <div className='col-lg-7' style={{marginTop: 6}}>
-              {this.state.checkbox.map((element, idx) => {
-                return(
-                  <React.Fragment key={`-1${idx}`}>
-                    <CreateCheckbox checkbox={this.state.checkbox} func={this.handleObjectChange} isInitialPeriod={true} 
-                    dis={null} elem={element} idx={idx} period={element.period} option={element.option} unique='-1'/>
-                  </React.Fragment>
-                )
-              })}
-            </div>
-          </div>
+          <FormRow label='Period'>
+            <Wrapper>
+              <div style={{marginTop: 6}}>
+                {this.props.checkbox.map((element, idx) => {
+                  return(
+                    <React.Fragment key={`-1${idx}`}>
+                      <CreateCheckbox obj={this.props.checkbox} func={this.handleObjectChange} isInitialPeriod={true} 
+                      dis={null} elem={element} idx={idx} period={element.period} option={element.option} unique='-1'/>
+                    </React.Fragment>
+                  )
+                })}
+              </div>              
+            </Wrapper>
+          </FormRow>
 {/* start date */}
-          {this.state.checkbox.map((element, idx) => {
+          {this.props.checkbox.map((element, idx) => {
             return(
               element.option
               ? (
-                <div className='form-group row' key={`Date${idx}`}>
-                  <label className='col-lg-2 col-form-label'>{`Start Date (${element.period})`}</label>
-                  <DateInput
-                    DD={element.startDD} MM={element.startMM} YYYY={element.startYYYY}
-                    nameDD='startDD' nameMM='startMM' nameYYYY='startYYYY' func={this.handleObjectChange}
-                    checkbox={this.state.checkbox} element={element}
+                <FormRow label={`Start Date (${element.period})`} key={`${idx}`}>
+                  <DateInput DD={element.startDD} MM={element.startMM} YYYY={element.startYYYY}
+                            nameDD='startDD' nameMM='startMM' nameYYYY='startYYYY' func={this.handleObjectChange}
+                            checkbox={this.state.checkbox} element={element}
                   />
                   <label className='col-lg-1 col-form-label'>{`End Date`}</label>
-                  <DateInput 
-                    DD={element.endDD} MM={element.endMM} YYYY={element.endYYYY}
-                    nameDD='endDD' nameMM='endMM' nameYYYY='endYYYY' func={this.handleObjectChange}
-                    checkbox={this.state.checkbox} element={element}
+                  <DateInput DD={element.endDD} MM={element.endMM} YYYY={element.endYYYY}
+                            nameDD='endDD' nameMM='endMM' nameYYYY='endYYYY' func={this.handleObjectChange}
+                            checkbox={this.state.checkbox} element={element}
                   />
-                </div>
+                </FormRow>
               )
               : null
             ) 
           })}
 {/* team member */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Team Member</label>
-            <div className="col-lg-7 column">
+          <FormRow label='Team Memer'>
+            <Wrapper>
               <table className="table-borderless" id="tab_logic">
                 <tbody>
-                  {this.state.rowsTM.map((item, itemIdx) => (
+                  {this.props.rowsTM.map((item, itemIdx) => (
                     <React.Fragment key={`rowsTM${itemIdx}`}>
                       <tr id={`rowsTM${itemIdx}`}>
                         <td style={{width: '17%'}}>
-                          <NameInput placeholder='Last Name' value={this.state.rowsTM.lastName} name='lastName' func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
+                          <NameInput placeholder='Last Name' value={item.lastName} name='lastName' func={this.handleObjectChange} obj={this.props.rowsTM} elem={item}/>
                         </td>
-                        <td style={{width: '29%'}}>
-                          <NameInput placeholder='First Name' value={this.state.rowsTM.firstName} name='firstName' func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
+                        <td style={{width: '30%'}}>
+                          <NameInput placeholder='First Name' value={item.firstName} name='firstName' func={this.handleObjectChange} obj={this.props.rowsTM} elem={item}/>
                         </td>
-                        <td style={{width: '17%'}}>
-                          <DropdownButton id="dropdown-basic-button" type='button' title={item.position} style={{marginLeft: 5}}>
-                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>PM</div></Dropdown.Item>
-                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>SA</div></Dropdown.Item>
-                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>AP</div></Dropdown.Item>
-                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.state.rowsTM, item)}>P</div></Dropdown.Item>
+                        <td style={{width: '16%'}}>
+                          <DropdownButton id="dropdown-basic-button" type='button' title={item.position}>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.props.rowsTM, item)}>PM</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.props.rowsTM, item)}>SA</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.props.rowsTM, item)}>AP</div></Dropdown.Item>
+                            <Dropdown.Item as='button' type='button'><div onClick={(e) => this.handleObjectChange('position', e.target.textContent, this.props.rowsTM, item)}>P</div></Dropdown.Item>
                           </DropdownButton>
                         </td>
                         <td>
-                          <div>
-                            {item.checkboxTM.map((element, elementIdx) => {
-                              return(
-                                <React.Fragment key={`${itemIdx}${elementIdx}`}>
-                                  <CreateCheckbox checkbox={item.checkboxTM} func={this.handleObjectChange} isInitialPeriod={false} 
-                                  dis={this.state.checkbox[elementIdx]['option']} elem={element} idx={elementIdx} period={element.period} option={element.option} unique={itemIdx}/>
-                                </React.Fragment>
-                              )
-                            })}
-                          </div>
+                          {item.checkboxTeamMember.map((element, elementIdx) => {
+                            return(
+                              <React.Fragment key={`${itemIdx}${elementIdx}`}>
+                                <CreateCheckbox checkbox={item.checkboxTeamMember} func={this.handleObjectChange} isInitialPeriod={false} 
+                                dis={this.props.checkbox[elementIdx]['option']} elem={element} idx={elementIdx} period={element.period} option={element.option} unique={itemIdx}/>
+                              </React.Fragment>
+                            )
+                          })}
                         </td>
                       </tr>
                       <tr>
                         <td/><td/><td/>
                         <td>
-                          <div className="input-group">
-                            <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsTM} elem={item}/>
-                          </div>
+                          <CostInput value={item.cost} func={this.handleObjectChange} obj={this.props.rowsTM} elem={item} placeholder='Cost'/>
                         </td>
                       </tr>
                     </React.Fragment>
                   ))}
                 </tbody>
-              </table>
-            </div>
-            <div>
-              <button type='button' className="btn btn-outline-secondary" style={{marginRight: 10}} onClick={this.AddRowTM}>
-                Add Member
-              </button>
-              <button type='button' className="btn btn-outline-danger" name='rowsTM' onClick={e => this.RemoveRow(e.target.name, this.state.rowsTM)} disabled={this.Disable(this.state.rowsTM)}>
-                Delete
-              </button>
-            </div>
-          </div>
+              </table>     
+            </Wrapper>           
+            <AddDelete name='rowsTM' AddRow={this.props.AddRowTeamMember} RemoveRow={this.props.RemoveRow} obj={this.props.rowsTM} Disable={this.DisableDelete}/>
+          </FormRow>
 {/* other cost */}
-          <div className="form-group row">
-            <label className='col-lg-2 col-form-label'>Other Cost</label>
-            <div className="col-lg-7 column">
+          <FormRow label='Other Cost'>
+            <Wrapper>
               <table className="table-borderless" id="tab_logic">
                 <tbody>
-                  {this.state.rowsOC.map((item, idx) => (
+                  {this.props.rowsOC.map((item, idx) => (
                     <tr id={`rowsOC${idx}`} key={`rowsOC${idx}`} style={{height: 45}}>
                       <td style={{width: '46%'}}>
-                        <NameInput placeholder='Equipment' name='equipment' value={item.equipment} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                        <NameInput placeholder='Equipment' name='equipment' value={item.equipment} func={this.handleObjectChange} obj={this.props.rowsOC} elem={item}/>
                       </td>
                       <td style={{width: '17%'}}>
-                        <QuantityInput value={item.quantity} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                        <QuantityInput value={item.quantity} func={this.handleObjectChange} obj={this.props.rowsOC} elem={item}/>
                       </td>
                       <td>
-                        <CostInput value={item.cost} func={this.handleObjectChange} obj={this.state.rowsOC} elem={item}/>
+                        <CostInput value={item.cost} func={this.handleObjectChange} obj={this.props.rowsOC} elem={item} placeholder='Cost'/>
                       </td>
                     </tr>
                   ))}
                 </tbody>
+                {/* Total Cost */}
                 <tfoot className='border-width'> 
                   <tr style={{height: 47}}>
                     <td/>
                     <td>
-                      <button type='button' className='btn btn-outline-primary' style={{marginLeft: 7}} onClick={this.calculate}>
+                      <button type='button' className='btn btn-outline-primary' style={{marginLeft: 15}} onClick={this.props.CalculateTotalCost}>
                         Calculate
                       </button>
                     </td>
@@ -288,28 +285,15 @@ class Edit extends Component {
                         <div className='input-group-prepend'>
                           <div className='input-group-text'>$</div>
                         </div>
-                        <input
-                          type="number"
-                          placeholder='Total Cost'
-                          value={this.state.totalCost}
-                          className="form-control"
-                          readOnly
-                        />
+                        <input type="number" placeholder='Total Cost' value={this.props.totalCost} className="form-control" readOnly/>
                       </div>
                     </td>
                   </tr>
                 </tfoot>
               </table>
-            </div>
-            <div>
-              <button type='button' className="btn btn-outline-secondary" style={{marginRight: 10}} onClick={this.AddRowOC}>
-                Add Item
-              </button> 
-              <button type='button' className="btn btn-outline-danger" name='rowsOC' onClick={e => this.RemoveRow(e.target.name, this.state.rowsOC)} disabled={this.Disable(this.state.rowsOC)}>
-                Delete
-              </button>
-            </div>
-          </div>
+            </Wrapper>
+            <AddDelete name='rowsOC' AddRow={this.props.AddRowOtherCost} RemoveRow={this.props.RemoveRow} obj={this.props.rowsOC} Disable={this.DisableDelete}/>
+          </FormRow>
 {/* Submit */}
           <div className='row'>
             <div className='offset-lg-2 col-lg-7'>
